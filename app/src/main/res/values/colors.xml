@@ -9,4 +9,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="green">#00FF0A</color>
     <color name="red">#FF0000</color>
+    <color name="flamingoUU">#D73704</color>
+    <color name="forest">#005943</color>
+    <color name="softForest">#9FDCB2</color>
 </resources>
