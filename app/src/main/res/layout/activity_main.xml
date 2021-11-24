@@ -1,40 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/main"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:background="@color/almond">
 
-    <com.github.mikephil.charting.charts.BarChart
-        android:visibility="gone"
-
-        android:id="@+id/barChart"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView1"
         android:layout_width="match_parent"
-        android:layout_height="280dp"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/cardView2"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <com.github.mikephil.charting.charts.LineChart
-        android:visibility="gone"
+        <com.github.mikephil.charting.charts.CombinedChart
+            android:id="@+id/combinedChart"
+            android:layout_width="match_parent"
+            android:layout_height="200dp" />
 
-        android:id="@+id/lineChart"
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView2"
         android:layout_width="match_parent"
-        android:layout_height="280dp"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/cardView3"
+        app:layout_constraintTop_toBottomOf="@+id/cardView1">
 
-    <com.github.mikephil.charting.charts.LineChart
-        android:visibility="gone"
-        android:id="@+id/lineChart2"
-        android:layout_width="match_parent"
-        android:layout_height="450dp"
-        app:layout_constraintBottom_toTopOf="@+id/barChart"
-        app:layout_constraintTop_toTopOf="@+id/combinedChart" />
+        <com.github.mikephil.charting.charts.CombinedChart
+            android:id="@+id/combinedChart1"
+            android:layout_width="match_parent"
+            android:layout_height="200dp" />
+    </androidx.cardview.widget.CardView>
 
-    <com.github.mikephil.charting.charts.CombinedChart
-        android:id="@+id/combinedChart"
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView3"
         android:layout_width="match_parent"
-        android:layout_height="280dp"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardView2">
+
+        <com.github.mikephil.charting.charts.CombinedChart
+            android:id="@+id/combinedChart2"
+            android:layout_width="match_parent"
+            android:layout_height="200dp" />
+    </androidx.cardview.widget.CardView>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

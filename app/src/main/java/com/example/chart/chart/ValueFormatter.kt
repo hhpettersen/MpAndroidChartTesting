@@ -3,8 +3,12 @@ package com.example.chart.chart
 import com.github.mikephil.charting.formatter.ValueFormatter
 import kotlin.math.roundToInt
 
-class ValueFormatter() : ValueFormatter() {
+class ValueFormatter(private val type: YAxisType) : ValueFormatter() {
     override fun getFormattedValue(value: Float): String {
-        return "${value.roundToInt()} ø/kWh"
+        val unit = when (type) {
+            YAxisType.CONSUMPTION -> "kWh"
+            YAxisType.PRICE -> "ø/kWh"
+        }
+        return "${value.roundToInt()} $unit"
     }
 }

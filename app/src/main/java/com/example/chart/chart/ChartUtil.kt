@@ -68,7 +68,10 @@ object ChartUtil {
 
         when (type) {
             DashboardChartType.CONSUMPTION -> {
-                val set = BarDataSet(consumptionData, "")
+                val set = BarDataSet(consumptionData, "").apply {
+                    color = ContextCompat.getColor(context, R.color.softForest)
+                    setDrawValues(false)
+                }
                 barData = BarData(set)
                 thresholdAxisMin = 0F
             }
@@ -142,7 +145,7 @@ object ChartUtil {
                 setDrawGridLines(false)
             }
             axisLeft.apply {
-                valueFormatter = ValueFormatter()
+                valueFormatter = ValueFormatter(type.getYAxisType())
                 setDrawGridLines(false)
             }
             setTouchEnabled(true)
@@ -434,5 +437,17 @@ class ComparisonBarDataSet(
 enum class DashboardChartType {
     CONSUMPTION,
     PRICE,
-    COST
+    COST;
+
+    fun getYAxisType(): YAxisType {
+        return when (this) {
+            PRICE, COST -> YAxisType.PRICE
+            CONSUMPTION -> YAxisType.CONSUMPTION
+        }
+    }
+}
+
+enum class YAxisType {
+    CONSUMPTION,
+    PRICE
 }
