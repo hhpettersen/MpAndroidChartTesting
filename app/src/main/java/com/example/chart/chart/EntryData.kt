@@ -46,7 +46,7 @@ object EntryData {
         numOfEntries: Int,
         min: Int,
         max: Int,
-        isBarEntries: Boolean
+        isBarEntries: Boolean = false
     ): MutableList<Entry> {
         val entries = mutableListOf<Entry>()
 
