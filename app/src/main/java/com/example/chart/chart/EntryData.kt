@@ -12,25 +12,29 @@ object EntryData {
         numOfEntries: Int,
         min: Int,
         max: Int,
-        isBarEntries: Boolean = false
+        isBarEntries: Boolean = false,
+        startIndex: Int = 0
     ): MutableList<Entry> {
         val entries = mutableListOf<Entry>()
+
+        var index = if (startIndex != 0) startIndex else 0
 
         repeat(numOfEntries) {
             entries.add(
                 if (isBarEntries) {
                     BarEntry(
-                        it.toFloat(),
+                        index.toFloat(),
                         Random.nextInt(min, max).toFloat()
                     )
                 } else {
                     Entry(
-                        it.toFloat(),
+                        index.toFloat(),
                         Random.nextInt(min, max).toFloat()
                     )
                 }
 
             )
+            index++
         }
         return entries
     }

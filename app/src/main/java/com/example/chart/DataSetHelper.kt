@@ -1,66 +1,29 @@
 package com.example.chart
 
-import android.content.Context
-import androidx.core.content.ContextCompat
-import com.github.mikephil.charting.data.*
-import java.util.*
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineDataSet
 
 object DataSetHelper {
 
-    val random = listOf<Entry>(
-        Entry(
-            2F,
-            300F
-        ),
-        Entry(
-            3F,
-            400F
-
-        ),
-        Entry(
-            4F,
-            500F
-        )
-    )
-
-    fun createListOfEntriesOnThreshold(entries: List<Entry>, threshold: Float): List<List<Entry>> {
-        var listOfEntries = mutableListOf<List<Entry>>()
-        val currentEntryList = mutableListOf<Entry>()
-
-        entries.forEach { entry ->
-            currentEntryList.add(entry)
-            if (entry.y == threshold) {
-                listOfEntries.add(currentEntryList)
-                currentEntryList.clear()
-                currentEntryList.add(entry)
-            }
-        }
-        return listOfEntries
-    }
-
-    fun createLineDataBasedOnThreshold(
+    fun createListOfEntriesOnThreshold(
         entries: List<Entry>,
         threshold: Float
-    ): LineData {
-        println("<<${entries}")
-        var index = 0
-        val lineData = LineData()
-        val lineDataSets = mutableListOf<LineDataSet>()
-        val entryList = mutableListOf<Entry>()
+    ): List<LineDataSet> {
+        val transformedEntries = createThresholdData(entries, threshold)
 
-        entries.forEach { entry ->
-            val fakeEntry = Entry(index.toFloat(), 200F)
-            index++
-            entryList.add(fakeEntry)
+        val lineDataSets = mutableListOf<LineDataSet>()
+
+        var lastSliced = 0
+        transformedEntries.forEachIndexed { index, entry ->
             if (entry.y == threshold) {
-                println("<<${entryList}")
-                val lineDataSet = LineDataSet(entryList, "${lineData.dataSetCount}")
-                lineData.addDataSet(lineDataSet)
-                entryList.clear()
-                entryList.add(fakeEntry)
+                val subList = transformedEntries.subList(lastSliced, index + 1)
+                val lineDataSet = LineDataSet(subList, "")
+                lineDataSets.add(lineDataSet)
+                lastSliced = index
             }
         }
-        return lineData
+
+        return lineDataSets
     }
 
     /**
@@ -69,7 +32,7 @@ object DataSetHelper {
      *
      *
      */
-    fun createThresholdData(entries: List<Entry>, threshold: Float): List<Entry> {
+    private fun createThresholdData(entries: List<Entry>, threshold: Float): List<Entry> {
         var entryIndex = 0
 
         val newList = mutableListOf<Entry>()
@@ -110,7 +73,7 @@ object DataSetHelper {
         return newList
     }
 
-    fun createAvgData(entries: List<Entry>): List<Entry> {
+    private fun createAvgData(entries: List<Entry>): List<Entry> {
         var entryIndex = 0
 
         val newList = mutableListOf<Entry>()
@@ -148,10 +111,3 @@ object DataSetHelper {
         return newList
     }
 }
-
-//class LineDataSetOwn(yVals: MutableList<Entry>?, label: String?) : LineDataSet(yVals, label) {
-//    override fun getColor(): Int {
-//        return super.getColor()
-//        if (getEntryForXValue())
-//    }
-//}
