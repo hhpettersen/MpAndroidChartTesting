@@ -15,6 +15,8 @@ import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.*
 import com.github.mikephil.charting.components.XAxis.XAxisPosition
 import com.github.mikephil.charting.data.*
+import com.github.mikephil.charting.renderer.CombinedChartRenderer
+import com.github.mikephil.charting.renderer.LineChartRenderer
 import java.util.*
 
 
@@ -77,7 +79,7 @@ object ChartUtil {
             DashboardChartType.PRICE -> {
                 limitLine = LimitLine(getThresholdNotZero(priceData), "limitline").apply {
                     label = ""
-                    lineWidth = 2f
+                    lineWidth = 1f
                     lineColor = ContextCompat.getColor(context, R.color.sun)
                 }
 
@@ -125,17 +127,31 @@ object ChartUtil {
 
                 limitLine = LimitLine(thresholdBar, "limitline").apply {
                     label = ""
-                    lineWidth = 2f
+                    lineWidth = 1f
                     lineColor = ContextCompat.getColor(context, R.color.sun)
                 }
             }
         }
 
+        val gradient = LinearGradient(
+            0f, 500F, 0f, 0f,
+            ContextCompat.getColor(context, R.color.forest),
+            ContextCompat.getColor(context, R.color.flamingoUU),
+            Shader.TileMode.CLAMP
+        )
+
+        combinedChart.renderer.paintRender.shader = gradient
+
+
         combinedChart.apply {
+            val customRenderer = GradientRenderer(this, context, thresholdPercentage)
+            renderer = customRenderer
             data = CombinedData().apply {
                 setData(barData)
                 setData(lineData)
             }
+            customRenderer.applyGradient()
+
             axisRight.apply {
                 limitLine?.let { addLimitLine(it) }
                 setDrawLabels(false)
@@ -430,6 +446,29 @@ class ComparisonBarDataSet(
             R.color.flamingoUU
         )
         else ContextCompat.getColor(context, R.color.softForest)
+    }
+}
+
+// Custom class to add gradient to lines in a CombinedChart
+class GradientRenderer(private val chart: CombinedChart, context: Context, threshold: Float) : CombinedChartRenderer(chart, chart.animator, chart.viewPortHandler) {
+    private val gradientThreshold = 1000F * (1 - threshold)
+
+    private val gradient = LinearGradient(
+        0f, gradientThreshold, 0f, 0f,
+        ContextCompat.getColor(context, R.color.forest),
+        ContextCompat.getColor(context, R.color.red),
+        Shader.TileMode.CLAMP
+    )
+
+    // Function needs to be called after the data has be assigned to CombinedChart
+    fun applyGradient() {
+        mRenderers.forEach { renderer ->
+            if (renderer is LineChartRenderer) {
+                chart.lineData.dataSets.forEach { _ ->
+                    renderer.paintRender.shader = gradient
+                }
+            }
+        }
     }
 }
 
