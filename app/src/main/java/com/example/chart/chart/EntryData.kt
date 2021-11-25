@@ -8,7 +8,7 @@ import kotlin.random.Random
  * Cast to MutableList<BarEntry> if expecting BarEntries
  */
 object EntryData {
-    fun randomData(
+    fun random(
         numOfEntries: Int,
         min: Int,
         max: Int,
@@ -36,13 +36,29 @@ object EntryData {
             )
             index++
         }
+        repeat(5) {
+            if (isBarEntries) {
+                BarEntry(
+                    index.toFloat(),
+
+                    0F
+                )
+            } else {
+                Entry(
+                    index.toFloat(),
+
+                    0F
+                )
+            }
+            index++
+        }
         return entries
     }
 
     /**
      * Cast to MutableList<BarEntry> if expecting BarEntries
      */
-    fun upAndDownData(
+    fun fluctuating(
         numOfEntries: Int,
         min: Int,
         max: Int,

@@ -157,7 +157,7 @@ object ChartUtil {
      * Chart where the color changes value goes below or above threshold
      */
     fun thresholdColorChangeChart(chart: LineChart, context: Context) {
-        val entry = EntryData.randomData(24, 0, 1500)
+        val entry = EntryData.random(24, 0, 1500)
         val lineDataSets = DataSetHelper.createListOfEntriesOnThreshold(entry, 750F)
 
 

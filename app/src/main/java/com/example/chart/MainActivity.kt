@@ -21,8 +21,8 @@ class MainActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        val barEntries = EntryData.randomData(24, 1000, 5000, true) as MutableList<BarEntry>
-        val lineEntries = EntryData.randomData(24, 80, 150)
+        val barEntries = EntryData.random(15, 1000, 5000, true) as MutableList<BarEntry>
+        val lineEntries = EntryData.random(24, 80, 150)
 
         dashBoardChart(
             combinedChart = binding.combinedChart,
