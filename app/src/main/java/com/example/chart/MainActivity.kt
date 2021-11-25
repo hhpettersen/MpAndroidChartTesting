@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatDelegate
 import com.example.chart.chart.ChartUtil.dashBoardChart
 import com.example.chart.chart.DashboardChartType
 import com.example.chart.chart.EntryData
-import com.example.chart.chart.YAxisType
 import com.example.chart.databinding.ActivityMainBinding
 import com.github.mikephil.charting.data.BarEntry
 
@@ -24,7 +23,6 @@ class MainActivity : AppCompatActivity() {
 
         val barEntries = EntryData.randomData(24, 1000, 5000, true) as MutableList<BarEntry>
         val lineEntries = EntryData.randomData(24, 80, 150)
-
 
         dashBoardChart(
             combinedChart = binding.combinedChart,
