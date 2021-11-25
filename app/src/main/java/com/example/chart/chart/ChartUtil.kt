@@ -15,6 +15,7 @@ import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.*
 import com.github.mikephil.charting.components.XAxis.XAxisPosition
 import com.github.mikephil.charting.data.*
+import java.util.*
 
 
 object ChartUtil {
@@ -54,16 +55,15 @@ object ChartUtil {
         var barData: BarData? = null
         var lineData: LineData? = null
         var limitLine: LimitLine? = null
-        var thresholdAxisMin: Float? = null
 
         fun getThreshold(entries: List<Entry>): Float {
             return (entries.map { it.y }.maxOrNull() ?: 0F) * thresholdPercentage
         }
 
         fun getThresholdNotZero(entries: List<Entry>): Float {
-            val high = entries.map { it.y }.maxOrNull() ?: 0F
-            val low = entries.map { it.y }.minOrNull() ?: 0F
-            return ((high - low) * thresholdPercentage) + low
+            val max = entries.map { it.y }.maxOrNull() ?: 0F
+            val min = entries.map { it.y }.minOrNull() ?: 0F
+            return ((max - min) * thresholdPercentage) + min
         }
 
         when (type) {
@@ -73,7 +73,6 @@ object ChartUtil {
                     setDrawValues(false)
                 }
                 barData = BarData(set)
-                thresholdAxisMin = 0F
             }
             DashboardChartType.PRICE -> {
                 limitLine = LimitLine(getThresholdNotZero(priceData), "limitline").apply {
@@ -95,7 +94,7 @@ object ChartUtil {
             }
             DashboardChartType.COST -> {
                 val thresholdBar = getThreshold(consumptionData)
-                val thresholdLine = getThreshold(priceData)
+                val thresholdLine = getThresholdNotZero(priceData)
 
                 val barDataSet =
                     ComparisonBarDataSet(
@@ -129,7 +128,6 @@ object ChartUtil {
                     lineWidth = 2f
                     lineColor = ContextCompat.getColor(context, R.color.sun)
                 }
-                thresholdAxisMin = 0F
             }
         }
 
@@ -140,13 +138,14 @@ object ChartUtil {
             }
             axisRight.apply {
                 limitLine?.let { addLimitLine(it) }
-                thresholdAxisMin?.let { axisMinimum = it }
                 setDrawLabels(false)
                 setDrawGridLines(false)
+                if (EnumSet.of(DashboardChartType.COST, DashboardChartType.CONSUMPTION).contains(type)) axisMinimum = 0F
             }
             axisLeft.apply {
                 valueFormatter = ValueFormatter(type.getYAxisType())
                 setDrawGridLines(false)
+                if (EnumSet.of(DashboardChartType.CONSUMPTION).contains(type)) axisMinimum = 0F
             }
             setTouchEnabled(true)
             isDragEnabled = true
@@ -411,7 +410,7 @@ object ChartUtil {
 }
 
 class ComparisonBarDataSet(
-    barEntries: List<BarEntry>?,
+    val barEntries: List<BarEntry>?,
     private val comparisonEntries: List<Entry>,
     private val barThreshold: Float?,
     private val comparisonThreshold: Float?,
@@ -419,7 +418,7 @@ class ComparisonBarDataSet(
     private val context: Context
 ) : BarDataSet(barEntries, label) {
     override fun getEntryIndex(e: BarEntry?): Int {
-        TODO("Not yet implemented")
+        return barEntries?.indexOf(e) ?: 0
     }
 
     /**
